@@ -1,0 +1,344 @@
+IO流技术：
+
+什么是IO？
+Input/Output：输入输出。
+
+什么是输入输出？
+在程序，都是相对于内存来说：
+    从内存到其他设备的数据：输出。
+    从其他设备到内存的数据：输入。
+
+    设备：一系列的硬件环境。
+    键盘，鼠标，显示器，打印机，硬盘。
+
+什么是流（Stream）？
+流是各个操作系统所对应的系统资源。
+
+File类：Java用来描述计算机上一切文件资源。
+File类在java.io包。
+
+File：文件或者目录的路径名的抽象体现。
+
+构造器：
+    File(String fileName);
+    // 将指定的字符串作为文件路径，创建一个
+    // File对象。
+
+File相关方法：
+
+创建文件或者目录：先要判断一些该文件或者目录是否存在。
+
+boolean exists();
+// 判断文件或者是目录是否存在。
+
+boolean createNewFile();
+// 当且仅当File对象所表示的文件不存在的时候，创建一个新的空文件。
+// 当File对象所表示文件存在的时候，就不再创建新的空文件。
+
+boolean mkdir();
+// 根据File对象所封装的字符串路径来创建单级目录
+
+boolean mkdirs();
+// 根据File对象所封装的字符串路径来创建多级目录
+
+isFile();
+// 判断File封装的字符串路径代表的是不是文件
+
+isDirectory();
+// 判断File封装的字符串路径代表的是不是目录
+
+delete();
+// 删除文件或者目录，当删除目录的时候，只能删除空目录。
+// 该方法是直接调用本地操作系统的删除命令，删除过程
+// 不经过回收站，直接删除。
+
+String[] list();
+// 查看某个目录下的文件或者目录，返回值表示的是此目录下的
+// 文件或者目录的名字
+
+File[] listFiles();
+// 查看某个目录下的文件或者目录，返回值表示的是此目录下的
+// 文件或者目录的路径被封装的File对象。
+
+getAbsolutePath();
+getPath();
+// 当File对象封装的是绝对路径的时候，这俩没区别。
+
+// 当File对象封装的是相对路径的时候，前者获取到的是该相对
+// 路径所代表的文件或者目录的绝对路径；后者获取到的是该相对
+// 路径，也就是new File(str)中的str是什么，这地方就是什么。
+
+IO流：
+Java按照文件的特性，将流分为字节流和字符流：
+字符流：
+Reader：字符输入流
+Writer：字符输出流
+
+字节流：
+InputStream：字节输入流
+    int read();
+    // 读取一个字节，并返回该字节。
+    int read(byte[]);
+    // 最多读取该数组长度个字节的数据存储到该数组中,
+    // 返回值是读取到的字节个数
+OutputStream：字节输出流
+    write(byte[]);
+    // 将指定的数组中的数据全部写入到某个文件中。
+    write(byte[],offset,length);
+    // 将指定的数组从offset位置开始，将length个字节写入
+    // 到某个文件中
+
+其他的字节流：
+命名方面的特点，该类的名字以他父类的名字结尾，
+               以某个功能对应的名字开头。
+
+编码问题：
+在某个文件中写入了“你好”俩字，却占了6个字节：
+由于该文件的编码是UTF-8，每个汉字最多占3个字节。
+一般在所有的编码表中，一个英文字符占一个字节。
+在GBK编码中，一个汉字占用2个字节。
+
+
+BufferedInputStream：带缓冲区的字节输入流。
+
+BufferedOutputStream：带缓冲区的字节输出流。
+在使用带有缓冲区的流写入数据的时候，在数据写入完成之后。
+需要调用该流的flush()方法，将数据进行写入操作。
+当关闭该流的时候，会自动先调用flush()方法，将数据写出去。
+
+flush()方法和close()方法都能将数据写出，区别：
+flush之后，还可以继续使用该流对象来写数据。
+close之后，关闭了该流资源，不能继续使用该流对象。
+
+字符流：
+Reader：输入字符流
+Writer：输出字符流
+操作纯字符的文件。
+
+编码：按照某一种字符集（编解码规则）将数据转化成字节。
+解码：按照某一种字符集将字节转化成数据。
+
+InputStreamReader：将字节转化成字符。
+OutputStreamWriter：将字符流转化成字节流。
+
+带缓冲区的字符流：
+BufferedReader：字符输入流。
+
+String readLine();
+// 如何确定一行文本的结束：当程序读取到“\r”、“\n”、“\r\n”
+// 则认为该行读取结束。
+
+// 返回值是：读取到的该行文本字符串；当读取到文件末尾的时候
+// 返回的是null。
+
+// 注意：该方法在读取一行文本的时候，读取的该行文本不包含
+//       回车和换行符。
+
+在读取文本文件的时候，比较高效的写法：
+
+FileInputStream fis=new FileInputStream(file);
+InputStreamReader isr=new InputStreamReader(fis);
+BufferedReader br=new BufferedReader(isr);
+
+
+BufferedWriter：字符输出流。
+高效的写法：
+FileOutputStream fos=new FileOutputStream(file);
+OutputStreamWriter osw=new OutputStreamWriter(fos);
+BufferedWriter bw=new BufferedWriter(osw);
+
+键盘录入：
+Java中，从键盘录入的数据都是字节。
+System.in：标准输入流，指的是从键盘的输入。
+System.out：标准输出，指的是将数据输出到显示器上。
+
+从键盘接收输入的步骤/思路：
+1.从键盘接收的数据是标准输入流，即InputStream。
+2.将该字节流转化成字符流，InputStreamReader。
+3.对得到的字符流进行操作。
+
+从键盘接收输入还有一种形式：使用Scanner类。不推荐。
+
+作业：
+1.从键盘接收一组值形式为：
+    “姓名,语文成绩,数学成绩,英语成绩”。
+2.创建Student(name,chinese,math,english,sum)对象，
+    来接收上面的输入。
+3.计算总成绩。
+4.将姓名和计算的总成绩以一下形式“姓名::总成绩”存放到某个
+    文件中。
+
+Scanner类：java.util包中的类。
+
+Scanner s=new Scanner(System.in);
+s.next();
+// 获取当前输入的数据第一个空格之前的所有内容
+
+s.nextLine();
+// 获取当前输入的整行数据
+
+s.nextInt(); // 将当前输入的数据转化成整数
+
+。。。
+
+//--------------------------------------------
+流的小结：
+File类：既能描述文件，又能描述目录的类。
+
+判断：
+    isFile()：判断是否是文件。
+    isDirectory()：判断是否是目录。
+    注意：当new File(str)，当str所代表的文件或者目录不存在
+          的时候，上面俩方法均返回false。
+    exists()：判断文件或者目录是否存在。
+
+创建：
+    createNewFile()：如果该文件不存在，创建一个新的空文件。
+                     如果该文件存在，直接返回false。
+    mkdir()：创建单级目录。
+    mkdirs()：创建多级目录。
+
+删除：
+    delete：如果是文件，直接删除；
+            如果是目录，只能删除空目录。
+
+获取：
+    getName()：获取文件名。
+    getParent()：获取父目录的路径名（字符串）。
+    getParentFile()：获取到的是父目录的路径名对应的File对象。
+    getPath()：new File(str)，str是什么，获取到的就是什么。
+    getAbsolutePath()：获取到的一定是文件或者目录的绝对路径。
+
+    list()：
+    // 获取目录下的子目录和子文件的文件名（字符串）
+    // 形成的字符串数组。
+    listFiles()：
+    // 获取目录下的子目录和子文件的File对象
+    // 形成的File数组。
+
+IO流体系：
+Closeable：让流具有可关闭性。
+
+字节流：
+InputStream：字节输入流。
+    read()：一次读取一个字节。
+            int类型的返回值是本次读取到的字节。
+    read(byte[] b)：将最多读取b.length个字节数据存储到b中。
+                    返回值是本次读取到的字节个数。
+    read(byte[] b,start,length)：
+        将最多读取length个字节存储到b中，但是是从start位置
+        开始存。
+    skip(long n)：跳过n个字节，从第n+1个字节的位置开始读。
+    close()：关闭此字节流资源。
+
+    FileInputStream：使用字节流来操作文件。
+        没有特有方法。
+    FilterInputStream：过滤器流（过渡）
+        BufferedInputStream：带缓冲区的字节流
+            不能直接操作文件，需要借助其他InputStream的子类来操作文件。
+
+OutputStream：字节输出流。
+    write(int)：一次写入一个字节。
+    write(byte[])：一次将次数组中的全部字节写入。
+    write(byte[],start,length)：
+        一次将该字节数组的start位置开始，写入length个字节。
+    flush()：将缓冲区中的数据写出去。
+    close()：关闭此输出流资源。
+
+    FileOutputStream：使用字节流来操作文件。
+        FileOutputStream(File/String[,boolean])：
+            构造器中的第一个参数是要操作的文件对象或者
+            文件名，该参数必须存在。第二个参数是可选参数，
+            boolean类型的参数表示是(true)否(false)追加数据到源文件。
+
+    FilterOutputStream：
+        BufferedOutputStream：带缓冲区的字节输出流。
+            该类不能直接操作文件，需要OutputStream的子类作为
+            构造器参数，来操作文件。
+
+字符流：
+Reader：字符输入流。
+    read()：一次读取一个字符。
+    read(char[] cs)：一次最多读取cs.length个字符，存储到cs中。
+    read(char[] cs,start,length)：
+        一次最多读取length个字符，
+        从cs的start位置开始存储到cs中。
+    skip(long n)：跳过n个字符，从第n+1个字符开始读。
+    close()：关闭与此流相关的资源。
+
+    InputStreamReader：将字节转换成字符的流。也称之为：桥流。
+        InputStreamReader(? extends InputStream[,Charset/String])：
+        例如：
+        InputStreamReader(new FIS("a.txt"),"UTF-8");
+        getEncoding()：获取当前流中的字符集。
+
+    BufferedReader：带缓冲区的字符输入流。
+        该流不能直接操作文件，需要一个Reader的子类作为
+        构造器参数，来操作文件。
+        readLine()：一次读取一行数据，遇到“\r”，“\n”，“\r\n”表示一行数据读取结束。
+                    注意：此方法读取不到回车换行符。
+
+Writer：字符输出流。
+    write(int c)：一次写入一个字符。
+        例子：write('a');
+    write(char[] c)：一次写入整个字符数组的数据。
+    write(String s)：一次斜土整个字符串的数据。
+    flush()：将缓冲区中的流写出去。
+    close()：关闭此流资源。
+
+    OutputStreamWriter：将字符流转化成字节流输出。
+        此流不能直接操作文件，需要OutputStream的子类作为构造器
+        参数来操作文件。
+
+    BufferedWriter：带缓冲区的字符输出流。
+        newLine()：写入一个行分割符。
+
+以上的流操作文件的过程称为：顺序读写。
+
+随机读写：RandomAccessFile。
+功能性的流：
+    ObjectInputStream、ObjectOutputStream
+    （对象的序列化和反序列化）
+    在Java中，如果要将一个对象通过流的形式写入到文件或者
+    其他目的地，则需要让该对象所属的类实现Serializable接口。
+    把这种接口中没有任何方法和字段的接口称为标记接口。
+
+    DataInputStream、DataOutputStream
+    （用来操作基本数据类型）
+    在使用其他的OutputStream的write方法写入数据的时候，
+    一次只能写入一个字节，当某个数据的字节个数大于一个字
+    节的时候，只能写入最低位1个字节。
+    当需要将某个数据的全部字节都写入到文件中的时候，可以
+    使用DataOutputStream或者ObjectOutputStream进行写入。
+
+    PipedInputStream、PipedOutputStream
+    （管道流）
+    在使用管道流的时候，数据由管道输出流交给管道输入流。
+    并且建议使用多线程分别处理数据的输入和输出。
+
+    SequenceInputStream（序列流）
+    将多个InputStream对象按照顺序连接成一个输入流。
+    使用场景：将多个文件合并成一个文件。
+
+    PrintStream（打印字节流）
+    PrintWriter（打印字符流）
+
+    ByteArrayInputStream、ByteArrayOutputStream
+    CharArrayInputStream、CharArrayOutputStream
+    StringReader、StringWriter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

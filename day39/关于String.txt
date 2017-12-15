@@ -1,0 +1,38 @@
+String类：
+该类是由final修饰的，意味着该类不能被继承。
+
+String str="abc";
+String str1=new String("abc");
+String str2="abc";
+
+str2==str：true
+str==str1：false
+str.equals(str1)：true
+//-----------------------------
+
+String str2=new String("abc");该代码创建了几个对象？
+
+// --------------------------
+字符串在赋值的时候，先回在常量池中寻找要赋值的字符串存在不存在
+如果不存在，先在常量池中存储一份，然后将常量池中的地址引用
+赋值给某个String的变量。
+如果在常量池中存在，直接将地址值赋值给某个String的变量。
+
+String s="hello";
+
+//--------------------------------
+
+char charAt(int); // 获取某个索引位置的字符
+
+int indexOf(int); // 获取某个字符第一次出现所处的索引位置
+
+int lastIndexOf(int); //最后一次出现的位置
+
+String substring(start,end);
+// 截取从start开始（包含）到end结束（不包含）
+// 的字符串作为新串返回
+
+
+
+
+

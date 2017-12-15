@@ -1,0 +1,144 @@
+反射：
+---------------Constructor类-------------------
+Constructor getConstructor(Class...cls);
+// 返回Class对象所表示的某个类的某个公有的构造器。
+Object newInstance();
+// 通过Constructor对象调用该方法，返回Class对象所表示的
+// 某个类的对象。该对象被向上转型了，本应该获取到的是
+// Student对象，但是通过上述方法获取到的是Object对象。
+
+--------------Field类-------------------
+Field getField(String fieldName);
+// 返回一个Field对象，该对表示Class对象所表示的类或者接口
+// 中指定的成员变量名为“fieldName”的那个公有的成员变量。
+
+Field getDeclaredField(String fieldName);
+// 返回Class对象所表示的类或者接口中指定的成员变量名为
+// “filedName”的成员变量。
+
+Object get(obj);
+// 返回的是参数obj对象所代表的那个类中的某个成员变量的值。
+
+void set(obj,value);
+// 给obj所表示的对象的所属类中的某个变量赋值为“value”
+
+// 如果通过get或者set方法操作的是某个类中的私有变量的时候，
+// 会抛出以下异常。是因为在不同的类中没有直接访问私有变量
+// 的权限。
+// 解决方案：暴力访问。
+// 调用Field类中的setAccessible(true)方法来开放对私有
+// 变量的访问权限。
+java.lang.IllegalAccessException:
+Class com.briup.jd1721.corejava.day31.ReflectDemo_0020
+can not access a member of
+class com.briup.jd1721.corejava.bean.Student
+with modifiers "private"
+	at sun.reflect.Reflection.ensureMemberAccess(Reflection.java:102)
+
+
+-----------------Method类-------------------
+Method getMethod(String methodName,Class<?>...parameterTypes);
+// 返回的是Method的一个对象，该对象表示“methodName”所表示的
+// 公有的成员方法。
+
+Method getDeclaredMethod(String methodName,Class<?>...parameterTypes);
+// 返回的是Method的一个对象，
+// 该对象表示“methodName”所表示的所有已声明的方法。
+
+Object invoke(obj,Object...os);
+// 在底层通过obj对象来调用某个指定的方法，该某个指定的方法
+// 的参数由“Object...os”提供。返回的是如果某个指定的方法有
+// 返回值，则用此方法（invoke）的返回值接收并返回。
+
+
+Class类中的所有带declared的方法：
+能够获取某个指定的类中的所有已声明的变量、构造器、方法等等。
+
+getConstructors();
+getFields();
+getMethods();
+
+getDeclaredConstructors();
+getDeclaredFields();
+getDeclaredMethods();
+
+-------------------------------------------------
+枚举：一个个的列举出来。有限个。JDK1.5出现的新特性。
+
+定义枚举类：
+public enum Week{
+    MON,TUE;
+}
+
+public class Week{
+    public static final Week MON=new Week();
+    public static final Week TUE=new Week();
+    private Week(){}
+}
+
+class Gender{
+    public static final Gender M=new Gender();
+    public static final Gender W=new Gender();
+    private Gender(){}
+}
+
+enum Color{
+    RED,YELLOW,GREEN;
+}
+
+
+Enum类：
+
+final String name();
+// 该方法返回通过枚举产生的对象所对应的某个常量的常量名。
+
+int ordinal();
+// 该方法返回的是通过枚举所产生的某个对象对应的常量在
+// 枚举的声明中的序号。
+
+T valueOf(Class<T> clazz,String name);
+// 此方法返回的是T的一个对象，
+// Class<T> clazz：告诉该方法，返回的是哪个类的对象。
+// String name：指定要返回的对象是哪个。该参数的值
+// 一定是枚举常量中的某一个，不能是其他的值或者空字符串。
+
+Color red=Color.RED;
+Color red=Enum.valueOf(Color.class,"RED");
+
+
+枚举类和正常类的区别：
+1.枚举类能创建的对象的个数是有限的。
+  正常类在一般情况可以无限制的创建对象。
+2.枚举类中默认私有化了构造器。
+  正常类中视情况而定。
+3.枚举类中存在静态常量；
+  而且静态常量的定义只能放在代码的最前面。
+  正常类中视情况而定。
+
+4.枚举类和正常类一样的是都是类，
+  在类中是可以自定义其他方法。
+
+枚举的用处：
+一般用在某个数据类型的个数确定的情况下。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
